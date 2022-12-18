@@ -1,3 +1,4 @@
+import 'package:event_app/components/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreenPage extends StatelessWidget {
@@ -58,26 +59,10 @@ class OnboardingScreenPage extends StatelessWidget {
                         const TextStyle(fontSize: 18.0, color: Colors.blueGrey),
                   ),
                 ),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: MaterialButton(
-                    onPressed: () {
-                      buttonOnClick();
-                    },
-                    color: Colors.blue,
-                    minWidth: double.infinity,
-                    elevation: 0,
-                    height: 60,
-                    child: Text(
-                      buttonText,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                CustomButton(
+                  buttonText: buttonText,
+                  buttonOnClick: buttonOnClick,
+                  isFilled: true,
                 )
               ],
             ),
