@@ -1,16 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppStartScreen extends StatelessWidget {
-  const AppStartScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(color: Colors.blue),
+      decoration: const BoxDecoration(color: Colors.blue),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
