@@ -1,41 +1,83 @@
 import 'package:flutter/material.dart';
 
 class OnboardingScreenPage extends StatelessWidget {
-  const OnboardingScreenPage({super.key});
+  String pageTitle = "";
+  String pageImage = "";
+  String pageDescription = "";
+  String buttonText = "";
+  Function buttonOnClick;
+
+  OnboardingScreenPage({
+    super.key,
+    required this.pageTitle,
+    required this.pageDescription,
+    required this.buttonText,
+    required this.pageImage,
+    required this.buttonOnClick,
+  });
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.grey,
       body: Column(
         children: [
           Container(
-              height: screenHeight * 0.5,
-              child: Image.asset("lib/assets/images/onboarding_1.png")),
+              padding: const EdgeInsets.only(top: 60),
+              height: screenHeight * 0.55,
+              child: Image.asset(pageImage)),
           Container(
             width: double.maxFinite,
-            height: screenHeight * 0.5,
-            padding: EdgeInsets.all(30),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50)),
-                border: Border.fromBorderSide(BorderSide(color: Colors.red))),
+            height: screenHeight * 0.45,
+            padding: const EdgeInsets.all(30),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
+            ),
             child: Column(
               children: [
-                Text(
-                  "Welcome to \nMosaic Event App",
-                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Find the best event near you with just one of the best app.",
-                  style: TextStyle(
-                    fontSize: 18.0,
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    pageTitle,
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-                MaterialButton(
-                  onPressed: () {},
-                  child: Text("Get Started"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  child: Text(
+                    pageDescription,
+                    textAlign: TextAlign.center,
+                    style:
+                        const TextStyle(fontSize: 18.0, color: Colors.blueGrey),
+                  ),
+                ),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  child: MaterialButton(
+                    onPressed: () {
+                      buttonOnClick();
+                    },
+                    color: Colors.blue,
+                    minWidth: double.infinity,
+                    elevation: 0,
+                    height: 60,
+                    child: Text(
+                      buttonText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),

@@ -14,9 +14,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: PageView(
         children: [
-          OnboardingScreenPage(),
-          OnboardingScreenPage(),
-          OnboardingScreenPage(),
+          OnboardingScreenPage(
+            pageTitle: "Welcome to\nMosaic Event App",
+            pageDescription:
+                "Find the best event near you with just one click of the best app.",
+            buttonText: "GetStarted",
+            pageImage: "lib/assets/images/onboarding_1.png",
+            buttonOnClick: () {},
+          ),
+          OnboardingScreenPage(
+            pageTitle: "Find And\nBook An Event",
+            pageDescription:
+                "Find the best event near you with just one click of the best app.",
+            buttonText: "GetStarted",
+            pageImage: "lib/assets/images/onboarding_2.png",
+            buttonOnClick: () {},
+          ),
+          OnboardingScreenPage(
+            pageTitle: "Organize\nA Premium Event",
+            pageDescription:
+                "Find the best event near you with just one click of the best app.",
+            buttonText: "GetStarted",
+            pageImage: "lib/assets/images/onboarding_3.png",
+            buttonOnClick: () {},
+          ),
         ],
       ),
     );
