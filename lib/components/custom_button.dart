@@ -4,11 +4,12 @@ class CustomButton extends StatelessWidget {
   Function buttonOnClick;
   String buttonText;
   bool isFilled = true;
-  CustomButton(
-      {super.key,
-      required this.buttonText,
-      required this.buttonOnClick,
-      required this.isFilled});
+  CustomButton({
+    super.key,
+    required this.buttonText,
+    required this.buttonOnClick,
+    required this.isFilled,
+  });
 
   @override
   Widget build(BuildContext context) {
