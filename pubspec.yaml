@@ -36,6 +36,7 @@ dependencies:
   google_fonts: ^3.0.1
   curved_navigation_bar: ^1.0.3
   smooth_page_indicator: ^1.0.0+2
+  flutter_native_splash: ^2.2.16
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+flutter_native_splash:
+  color: "#ffffff"
+  image: lib/assets/images/logo_rounded.png
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

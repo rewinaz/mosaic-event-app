@@ -1,10 +1,12 @@
-import 'package:event_app/components/onboarding/onboarding_screen_page.dart';
-import 'package:event_app/screens/onboarding_screen.dart';
-import 'package:event_app/screens/signin_screen.dart';
 import 'package:event_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() {
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.removeAfter(initialization);
+
   runApp(const MyApp());
 }
 
