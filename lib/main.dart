@@ -1,5 +1,7 @@
 import 'package:event_app/components/onboarding/onboarding_screen_page.dart';
 import 'package:event_app/screens/onboarding_screen.dart';
+import 'package:event_app/screens/signin_screen.dart';
+import 'package:event_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,9 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: OnboardingScreen()
-      ),
+      home: const Scaffold(body: SignupScreen()),
     );
   }
 }

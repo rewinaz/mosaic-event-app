@@ -20,7 +20,7 @@ class CustomButton extends StatelessWidget {
           onPressed: () {
             buttonOnClick();
           },
-          color: Colors.blue,
+          color: const Color.fromRGBO(46, 137, 232, 1),
           minWidth: double.infinity,
           elevation: 0,
           height: 60,
