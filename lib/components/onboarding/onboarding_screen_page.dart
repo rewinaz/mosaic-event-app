@@ -21,7 +21,7 @@ class OnboardingScreenPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: const Color.fromRGBO(249, 249, 255, 1),
       body: Column(
         children: [
           Container(
