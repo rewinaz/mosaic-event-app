@@ -1,4 +1,6 @@
 import 'package:event_app/components/onboarding/onboarding_screen_page.dart';
+import 'package:event_app/screens/home_screen.dart';
+import 'package:event_app/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -54,7 +56,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 buttonText: "Get Started",
                 pageImage: "lib/assets/images/onboarding_3.png",
                 buttonOnClick: () {
-                  changeToNextPage(_pageController);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignInScreen()),
+                  );
                 },
               ),
             ],
