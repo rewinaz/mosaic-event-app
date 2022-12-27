@@ -1,5 +1,7 @@
+import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/screens/signin_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,35 +25,19 @@ class _SignupScreenState extends State<SignupScreen> {
   final Color lightGray = const Color.fromRGBO(249, 249, 255, 1.0);
   final Color blueColor = const Color.fromRGBO(46, 137, 232, 1);
   bool isTermsAgreed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isTermsAgreed = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        // ignore: prefer_const_constructors
-        title: Text(
-          "Sign up",
-          style: const TextStyle(
-            fontSize: 22,
-            color: Color.fromRGBO(54, 61, 78, 1),
-          ),
-        ),
-        centerTitle: true,
-        leading: Container(
-          width: 20,
-          height: 20,
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: const Icon(
-            Icons.arrow_back_rounded,
-            size: 40,
-            color: Colors.black,
-          ),
-        ),
+      appBar: customAppBar(
+        context: context,
+        title: "Sign Up",
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -134,8 +120,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           Checkbox(
                             value: isTermsAgreed,
-                            onChanged: (checked) =>
-                                {isTermsAgreed = !isTermsAgreed},
+                            onChanged: (checked) => {
+                              setState((() {
+                                isTermsAgreed = !isTermsAgreed;
+                              }))
+                            },
                           ),
                           const Text(
                             "By creating an account you agree \nto our Terms of Service and \nPrivacy Policy",
@@ -153,7 +142,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 CustomButton(
                   buttonText: "Sign up",
-                  buttonOnClick: () {},
+                  buttonOnClick: () {
+                    // TODO implement onCLick
+                  },
                   isFilled: true,
                 ),
 
@@ -175,6 +166,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     GestureDetector(
                       onTap: () {
                         // TODO Implement routing to signin
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => SignInScreen()));
                       },
                       child: Text(
                         " Sign In",

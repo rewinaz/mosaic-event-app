@@ -1,5 +1,8 @@
+import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/screens/home_screen.dart';
+import 'package:event_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -16,36 +19,18 @@ class _SignInScreenState extends State<SignInScreen> {
   final Color enabledBorderColor = const Color.fromRGBO(249, 249, 255, 1.0);
   final Color fillColor = const Color.fromRGBO(249, 249, 255, 1.0);
   @override
+  void initState() {
+    super.initState();
+    isRememberMeChecked = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        // ignore: prefer_const_constructors
-        title: Text(
-          "Sign in",
-          style: const TextStyle(
-            fontSize: 22,
-            color: Color.fromRGBO(54, 61, 78, 1),
-          ),
-        ),
-        centerTitle: true,
-        leading: Container(
-          width: 20,
-          height: 20,
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: const Icon(
-            Icons.arrow_back_rounded,
-            size: 40,
-            color: Colors.black,
-          ),
-        ),
+      appBar: customAppBar(
+        context: context,
+        title: "Sign In",
       ),
-      backgroundColor: Color.fromRGBO(0, 0, 0, 0.05),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -92,11 +77,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           Row(
                             children: [
                               Checkbox(
-                                value: isRememberMeChecked,
-                                onChanged: (checked) => {
-                                  isRememberMeChecked = !isRememberMeChecked
-                                },
-                              ),
+                                  value: isRememberMeChecked,
+                                  onChanged: (checked) => {
+                                        setState((() {
+                                          isRememberMeChecked =
+                                              !isRememberMeChecked;
+                                        }))
+                                      }),
                               const Text(
                                 "Remember me",
                                 style: TextStyle(
@@ -118,7 +105,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 CustomButton(
                   buttonText: "Sign in",
-                  buttonOnClick: () {},
+                  buttonOnClick: () {
+                    // TODO Handle Signin onClick
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    );
+                  },
                   isFilled: true,
                 ),
 
@@ -140,6 +134,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     GestureDetector(
                       onTap: () {
                         // TODO Implement routing to signin
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => SignupScreen()));
                       },
                       child: const Text(
                         " Sign Up",
