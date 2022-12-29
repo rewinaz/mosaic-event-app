@@ -1,6 +1,10 @@
+import 'package:event_app/components/add_new_event_screen/custom_event_image_selector_wrapper.dart';
+import 'package:event_app/components/add_new_event_screen/custom_radio_buttons.dart';
+import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_datetime_selector.dart';
 import 'package:event_app/components/custom_dropdown_selector.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/helper_functions/date_selection_function.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +18,9 @@ class AddNewEventScreen extends StatefulWidget {
 class _AddNewEventScreenState extends State<AddNewEventScreen> {
   final TextEditingController _eventTitleController = TextEditingController();
   final TextEditingController _startingDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _startingTimeController = TextEditingController();
+  final TextEditingController _endTimeController = TextEditingController();
   Color inputFillColor = Colors.white;
   Color inputBorderColor = Colors.white;
   double inputBorderRadius = 30.0;
@@ -21,43 +28,26 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
   List<String> categories = ["Itemdsx1", "Item2hgf", "Item3rtefd"];
 
   // TODO Move This two functions to other file
-  getDateFromUser() async {
-    // TODO IMPLEMENT DATE SELECTION
-    DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1950),
-        //DateTime.now() - not to allow to choose before today.
-        lastDate: DateTime(2100));
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(
-          pickedDate); //formatted date output using intl package =>  2021-03-16
-      return formattedDate;
-    } else {
-      return "";
-    }
+
+  getDate(TextEditingController controller) async {
+    String date = await getDateFromUser(context);
+    setState(() {
+      controller.text = date;
+    });
   }
 
-  getTimeFromUser() async {
-    // TODO IMPLEMENT TIME SELECTION
-    // getDateFromUser().then((text) => {print("" + text)});
-    TimeOfDay? pickedTime =
-        await showTimePicker(initialTime: TimeOfDay.now(), context: context);
+  getTime(TextEditingController controller) async {
+    String time = await getTimeFromUser(context);
+    controller.text = time;
+  }
 
-    if (pickedTime != null) {
-      print(pickedTime.format(context)); //output 10:51 PM
-      DateTime parsedTime =
-          DateFormat.jm().parse(pickedTime.format(context).toString());
-      //converting to DateTime so that we can further format on different pattern.
-      //output 1970-01-01 22:53:00.000
-      String formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
-      //DateFormat() is from intl package, you can format the time on any pattern you need.
-
-      return formattedTime; //set the value of text field.
-    } else {
-      print("Time is not selected");
-      return "";
-    }
+  @override
+  void initState() {
+    _startingDateController.text = "";
+    _endDateController.text = "";
+    _startingTimeController.text = "";
+    _endTimeController.text = "";
+    super.initState();
   }
 
   @override
@@ -65,16 +55,26 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
     // Clean up the controller when the widget is disposed.
     _eventTitleController.dispose();
     _startingDateController.dispose();
+    _endDateController.dispose();
+    _startingTimeController.dispose();
+    _endTimeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppBar(
+          context: context,
+          title: "Create Event",
+          leadingIcon: Icons.arrow_back_ios_new_rounded,
+          leadingOnTap: () {
+            // TODO Implement onTap
+          }),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
                 // Event Title Text Input
@@ -118,6 +118,11 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                 ),
 
                 //TODO Private or public radio button
+                CustomRadioButtons(
+                  value: "",
+                  groupValue: "groupValue",
+                  onChanged: () {},
+                ),
 
                 // TODO Start Date, End Date Custom Selector
                 Row(
@@ -127,13 +132,13 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                       controller: _startingDateController,
                       hintText: "Start Date",
                       suffixIcon: Icons.event,
-                      onTap: () {},
+                      onTap: getDate,
                     ),
                     CustomDateTimeSelector(
-                      controller: _startingDateController,
+                      controller: _endDateController,
                       hintText: "End Date",
                       suffixIcon: Icons.event,
-                      onTap: () {},
+                      onTap: getDate,
                     ),
                   ],
                 ),
@@ -143,21 +148,22 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomDateTimeSelector(
-                      controller: _startingDateController,
+                      controller: _startingTimeController,
                       hintText: "Start Time",
                       suffixIcon: Icons.timer_outlined,
-                      onTap: () {},
+                      onTap: getTime,
                     ),
                     CustomDateTimeSelector(
-                      controller: _startingDateController,
+                      controller: _endTimeController,
                       hintText: "End Time",
                       suffixIcon: Icons.timer_outlined,
-                      onTap: () {},
+                      onTap: getTime,
                     ),
                   ],
                 ),
 
                 // TODO Event Image Selector And Display Custom
+                CustomImageSelector(),
 
                 // TODO Event Description Text Input
 
@@ -181,6 +187,15 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                 //TODO: Quantity Currency
 
                 // TODO Ticket Price input
+                CustomTextField(
+                  inputController: _eventTitleController,
+                  hintText: "Ticket Price",
+                  labelText: "Ticket Price",
+                  borderRadius: inputBorderRadius,
+                  filledColor: inputFillColor,
+                  borderColor: inputBorderColor,
+                  enabledBorderColor: inputBorderColor,
+                ),
 
                 // TODO PREVIEW Button
                 // TODO POST Button

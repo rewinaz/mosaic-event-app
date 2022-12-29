@@ -1,12 +1,14 @@
+import 'package:event_app/components/custom_bottom_navigation_bar.dart';
+import 'package:event_app/screens/add_new_event_screen.dart';
+import 'package:event_app/screens/home_screen.dart';
+import 'package:event_app/screens/onboarding_screen.dart';
+import 'package:event_app/screens/signin_screen.dart';
 import 'package:event_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // FlutterNativeSplash.removeAfter(initialization);
-
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(body: SignupScreen()),
+      home: AddNewEventScreen(),
     );
   }
 }
