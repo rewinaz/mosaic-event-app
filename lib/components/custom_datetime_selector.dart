@@ -68,7 +68,7 @@ class _CustomDateTimeSelectorState extends State<CustomDateTimeSelector> {
         ),
         onTap: () {
           setState(() {
-            widget.onTap();
+            widget.onTap(widget.controller);
           });
         },
       ),
