@@ -1,4 +1,5 @@
 import 'package:event_app/components/onboarding/onboarding_screen_page.dart';
+import 'package:event_app/screens/auth_screen.dart';
 import 'package:event_app/screens/home_screen.dart';
 import 'package:event_app/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 buttonOnClick: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignInScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => AuthScreen(),
+                    ),
                   );
                 },
               ),
