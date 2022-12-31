@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CustomTextField extends StatelessWidget {
   TextEditingController inputController;
-  String? labelText;
-  String? hintText;
-  String? errorText;
+  String? labelText, hintText, errorText;
   IconData? prefixIcon;
   TextInputType? textInputType;
   TextInputAction? textInputAction;
-  Color? borderColor;
-  Color? focusedBorderColor;
-  Color? enabledBorderColor;
-  Color? filledColor;
+  Color? borderColor, focusedBorderColor, enabledBorderColor, filledColor;
   double? borderRadius;
   bool? obsecureText;
-  CustomTextField(
-      {super.key,
-      required this.inputController,
-      this.hintText,
-      this.labelText,
-      this.prefixIcon,
-      this.errorText,
-      this.textInputType,
-      this.textInputAction,
-      this.borderColor,
-      this.focusedBorderColor,
-      this.enabledBorderColor,
-      this.filledColor,
-      this.borderRadius,
-      this.obsecureText});
+  AutovalidateMode? autovalidateMode;
+  // String Function(String? value)? validator;
+  String? Function(String? value)? validator;
+
+  CustomTextField({
+    super.key,
+    required this.inputController,
+    this.hintText,
+    this.labelText,
+    this.prefixIcon,
+    this.errorText,
+    this.textInputType,
+    this.textInputAction,
+    this.borderColor,
+    this.focusedBorderColor,
+    this.enabledBorderColor,
+    this.filledColor,
+    this.borderRadius,
+    this.obsecureText,
+    this.autovalidateMode,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: TextField(
+      child: TextFormField(
         controller: inputController,
         keyboardType: textInputType ?? TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
@@ -68,6 +71,8 @@ class CustomTextField extends StatelessWidget {
           ),
           errorText: errorText,
         ),
+        autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
+        validator: validator==null ? (value)=> null: (value)=>validator!(value),
       ),
     );
   }

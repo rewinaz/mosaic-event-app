@@ -3,34 +3,37 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   Function buttonOnClick;
   String buttonText;
-  bool isFilled = true;
+  bool? isFilled = true;
+  Color? backgroundColor, textColor, borderColor;
   CustomButton({
     super.key,
     required this.buttonText,
     required this.buttonOnClick,
-    required this.isFilled,
+    this.isFilled,
+    this.backgroundColor,
+    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (isFilled) {
+    if (isFilled == null || isFilled == true) {
       return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         child: MaterialButton(
           onPressed: () {
             buttonOnClick();
           },
-          color: const Color.fromRGBO(46, 137, 232, 1),
+          color: backgroundColor ?? const Color.fromRGBO(46, 137, 232, 1),
           minWidth: double.infinity,
           elevation: 0,
           height: 60,
           child: Text(
             buttonText,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: textColor ?? Colors.white,
             ),
           ),
         ),
@@ -39,7 +42,7 @@ class CustomButton extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          border: Border.all(color: Colors.blue, width: 3),
+          border: Border.all(color: borderColor ?? Colors.blue, width: 2),
         ),
         child: MaterialButton(
           onPressed: () {
@@ -52,10 +55,10 @@ class CustomButton extends StatelessWidget {
           child: Text(
             buttonText,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: textColor ?? Colors.blue,
             ),
           ),
         ),

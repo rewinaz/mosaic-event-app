@@ -53,9 +53,9 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                 style: const TextStyle(fontSize: 16, color: Colors.black),
               )))
           .toList(),
-      onChanged: (value) => {
-        // widget.onChanged()
-        setState(() => {selectedItem = value})
+      onChanged: (value) {
+        widget.onChanged(value);
+        setState(() => {selectedItem = value});
       },
       decoration: InputDecoration(
         hintText: widget.hintText,
