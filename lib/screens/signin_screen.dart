@@ -1,23 +1,43 @@
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
-import 'package:event_app/screens/home_screen.dart';
-import 'package:event_app/screens/signup_screen.dart';
+import 'package:event_app/helpers/form_validators.dart';
+import 'package:event_app/helpers/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  VoidCallback onClickedSignUp;
+  SignInScreen({super.key, required this.onClickedSignUp});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isRememberMeChecked = false;
   final Color enabledBorderColor = const Color.fromRGBO(249, 249, 255, 1.0);
   final Color fillColor = const Color.fromRGBO(249, 249, 255, 1.0);
+
+  signIn() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
+
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      Utils.showErrorSnackBar(e.message);
+    }
+
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -47,72 +67,73 @@ class _SignInScreenState extends State<SignInScreen> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white,
                   ),
-                  child: Column(
-                    children: [
-                      // Email TextInput
-                      CustomTextField(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        // Email TextInput
+                        CustomTextField(
                           inputController: _emailController,
-                          hintText: "rewinazerou@gmail.com",
+                          hintText: "Your Email",
                           labelText: "Email",
                           prefixIcon: Icons.mail_outlined,
                           filledColor: fillColor,
                           borderRadius: 25,
-                          enabledBorderColor: enabledBorderColor),
+                          enabledBorderColor: enabledBorderColor,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => FormValidators.emailValidator(value),
+                        ),
 
-                      // Password TextInput
-                      CustomTextField(
-                        inputController: _passwordController,
-                        labelText: "Password",
-                        prefixIcon: Icons.lock_outlined,
-                        obsecureText: true,
-                        filledColor: fillColor,
-                        borderRadius: 25,
-                        enabledBorderColor: enabledBorderColor,
-                      ),
+                        // Password TextInput
+                        CustomTextField(
+                          inputController: _passwordController,
+                          labelText: "Password",
+                          prefixIcon: Icons.lock_outlined,
+                          obsecureText: true,
+                          filledColor: fillColor,
+                          borderRadius: 25,
+                          enabledBorderColor: enabledBorderColor,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => FormValidators.passwordValidator(value),
+                        ),
 
-                      // Forget Password and remember me section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                  value: isRememberMeChecked,
-                                  onChanged: (checked) => {
-                                        setState((() {
-                                          isRememberMeChecked =
-                                              !isRememberMeChecked;
-                                        }))
-                                      }),
-                              const Text(
-                                "Remember me",
-                                style: TextStyle(
-                                  fontSize: 14,
+                        // Forget Password and remember me section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                    value: isRememberMeChecked,
+                                    onChanged: (checked) => {
+                                          setState((() {
+                                            isRememberMeChecked =
+                                                !isRememberMeChecked;
+                                          }))
+                                        }),
+                                const Text(
+                                  "Remember me",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            "Forget Password ?",
-                            style: TextStyle(
-                              fontSize: 14,
+                              ],
                             ),
-                          )
-                        ],
-                      )
-                    ],
+                            const Text(
+                              "Forget Password ?",
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 CustomButton(
                   buttonText: "Sign in",
-                  buttonOnClick: () {
-                    // TODO Handle Signin onClick
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
-                  },
+                  buttonOnClick: () => signIn(),
                   isFilled: true,
                 ),
 
@@ -132,11 +153,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        // TODO Implement routing to signin
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => SignupScreen()));
-                      },
+                      onTap: widget.onClickedSignUp,
                       child: const Text(
                         " Sign Up",
                         style: TextStyle(

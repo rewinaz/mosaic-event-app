@@ -1,18 +1,29 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/helpers/form_validators.dart';
+import 'package:event_app/helpers/get_image_from_gallery.dart';
+import 'package:event_app/helpers/utils.dart';
 import 'package:event_app/screens/signin_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  VoidCallback onClickedSignIn;
+  SignupScreen({super.key, required this.onClickedSignIn});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -25,11 +36,100 @@ class _SignupScreenState extends State<SignupScreen> {
   final Color lightGray = const Color.fromRGBO(249, 249, 255, 1.0);
   final Color blueColor = const Color.fromRGBO(46, 137, 232, 1);
   bool isTermsAgreed = false;
+  XFile? profilePicture;
+
+  getProfilePicture() async {
+    XFile? image = await getImageFromGallery();
+    setState(() {
+      profilePicture = image;
+    });
+  }
+
+  removeProfilePicture() {
+    setState(() {
+      profilePicture = null;
+    });
+  }
+
+  signUp() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
+
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim())
+          .then(
+        (value) async {
+          String imageUrl = "";
+          if (profilePicture != null) {
+            imageUrl = await uploadFileToFireStore(
+              File(profilePicture!.path),
+              "profile_pictures",
+              profilePicture!.name,
+            );
+          }
+
+          saveUserDataToFireStore(
+            fullName: _fullNameController.text.trim(),
+            email: _emailController.text.trim(),
+            phoneNumber: _phoneController.text.trim(),
+            imageLink: imageUrl,
+          );
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      Utils.showErrorSnackBar(e.message);
+    }
+  }
+
+  saveUserDataToFireStore(
+      {required String fullName,
+      required String email,
+      required phoneNumber,
+      required String imageLink}) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = FirebaseFirestore.instance.collection("users");
+
+    users
+        .add({
+          "fullName": fullName,
+          "email": email,
+          "phone": phoneNumber,
+          "imageLink": imageLink,
+        })
+        .then((value) => Utils.showSuccessSnackBar("User Added Successfully."))
+        .catchError((error) => Utils.showErrorSnackBar(
+            "There was an error when adding the user."));
+  }
+
+  Future<String> uploadFileToFireStore(
+      File file, String folderName, String fileName) async {
+    String path = "$folderName/$fileName";
+    final ref = FirebaseStorage.instance.ref().child(path);
+
+    UploadTask uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask.whenComplete(() {});
+
+    final downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
 
   @override
   void initState() {
+    profilePicture = null;
     super.initState();
-    isTermsAgreed = false;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,95 +155,122 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white,
                   ),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: CircleAvatar(
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 70,
-                            color: blueColor,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () => {
+                            profilePicture != null
+                                ? removeProfilePicture()
+                                : getProfilePicture()
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundColor: lightGray,
+                              child: profilePicture == null
+                                  ? Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 70,
+                                      color: blueColor,
+                                    )
+                                  : ClipOval(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Image.file(
+                                            File(profilePicture!.path),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
+                                          Icon(
+                                            Icons.close_rounded,
+                                            size: 70,
+                                            color: Colors.red.shade600,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                            ),
                           ),
-                          radius: 50,
-                          backgroundColor: lightGray,
                         ),
-                      ),
-                      // Email TextInput
-                      CustomTextField(
-                        inputController: _emailController,
-                        labelText: "Full Name",
-                        filledColor: fillColor,
-                        borderRadius: 25,
-                        enabledBorderColor: enabledBorderColor,
-                        textInputType: TextInputType.name,
-                      ),
+                        // Email TextInput
+                        CustomTextField(
+                          inputController: _fullNameController,
+                          labelText: "Full Name",
+                          filledColor: fillColor,
+                          borderRadius: 25,
+                          enabledBorderColor: enabledBorderColor,
+                          textInputType: TextInputType.name,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              FormValidators.fullNameValidator(value),
+                        ),
 
-                      // Password TextInput
-                      CustomTextField(
-                        inputController: _passwordController,
-                        labelText: "Phone",
-                        filledColor: fillColor,
-                        borderRadius: 25,
-                        enabledBorderColor: enabledBorderColor,
-                        textInputType: TextInputType.phone,
-                      ),
-                      CustomTextField(
-                          inputController: _passwordController,
+                        // Password TextInput
+                        CustomTextField(
+                          inputController: _phoneController,
+                          labelText: "Phone",
+                          filledColor: fillColor,
+                          borderRadius: 25,
+                          enabledBorderColor: enabledBorderColor,
+                          textInputType: TextInputType.phone,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              FormValidators.phoneValidator(value),
+                        ),
+                        CustomTextField(
+                          inputController: _emailController,
                           labelText: "Email",
                           filledColor: fillColor,
                           borderRadius: 25,
                           enabledBorderColor: enabledBorderColor,
-                          textInputType: TextInputType.emailAddress),
-                      CustomTextField(
-                        inputController: _passwordController,
-                        labelText: "Password",
-                        obsecureText: true,
-                        filledColor: fillColor,
-                        borderRadius: 25,
-                        enabledBorderColor: enabledBorderColor,
-                      ),
-                      CustomTextField(
-                        inputController: _passwordController,
-                        labelText: "Confirm Password",
-                        obsecureText: true,
-                        filledColor: fillColor,
-                        borderRadius: 25,
-                        enabledBorderColor: enabledBorderColor,
-                      ),
-
-                      // Forget Password and remember me section
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: isTermsAgreed,
-                            onChanged: (checked) => {
-                              setState((() {
-                                isTermsAgreed = !isTermsAgreed;
-                              }))
-                            },
+                          textInputType: TextInputType.emailAddress,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              FormValidators.emailValidator(value),
+                        ),
+                        CustomTextField(
+                          inputController: _passwordController,
+                          labelText: "Password",
+                          obsecureText: true,
+                          filledColor: fillColor,
+                          borderRadius: 25,
+                          enabledBorderColor: enabledBorderColor,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              FormValidators.passwordConfirmValidator(
+                            value,
+                            _confirmPasswordController.text.trim(),
                           ),
-                          const Text(
-                            "By creating an account you agree \nto our Terms of Service and \nPrivacy Policy",
-                            softWrap: true,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        ),
+                        CustomTextField(
+                          inputController: _confirmPasswordController,
+                          labelText: "Confirm Password",
+                          obsecureText: true,
+                          filledColor: fillColor,
+                          borderRadius: 25,
+                          enabledBorderColor: enabledBorderColor,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              FormValidators.passwordConfirmValidator(
+                            value,
+                            _passwordController.text.trim(),
                           ),
-                        ],
-                      )
-                    ],
+                        ),
+
+                        // Forget Password and remember me section
+                      ],
+                    ),
                   ),
                 ),
                 CustomButton(
                   buttonText: "Sign up",
                   buttonOnClick: () {
-                    // TODO implement onCLick
+                    signUp();
                   },
                   isFilled: true,
                 ),
@@ -164,12 +291,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        // TODO Implement routing to signin
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => SignInScreen()));
-                      },
-                      child: Text(
+                      onTap: widget.onClickedSignIn,
+                      child: const Text(
                         " Sign In",
                         style: TextStyle(
                           fontSize: 18,
@@ -181,7 +304,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 )
               ],
