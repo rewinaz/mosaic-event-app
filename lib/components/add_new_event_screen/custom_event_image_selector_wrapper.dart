@@ -4,7 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CustomImageSelector extends StatefulWidget {
-  const CustomImageSelector({super.key});
+  Function onNewImageAdded;
+  CustomImageSelector({super.key, required this.onNewImageAdded});
 
   @override
   State<CustomImageSelector> createState() => _CustomImageSelectorState();
@@ -34,6 +35,7 @@ class _CustomImageSelectorState extends State<CustomImageSelector> {
       if (image != null) {
         print(image.path);
         selectedImages.add(image);
+        widget.onNewImageAdded(selectedImages);
         setState(() {
           selectedImages = selectedImages;
         });
@@ -43,6 +45,7 @@ class _CustomImageSelectorState extends State<CustomImageSelector> {
 
   removeImage(XFile image) {
     selectedImages.remove(image);
+    widget.onNewImageAdded(selectedImages);
     setState(() {
       selectedImages = selectedImages;
     });
