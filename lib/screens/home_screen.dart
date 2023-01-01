@@ -4,6 +4,7 @@ import 'package:event_app/components/home_screen/category_card.dart';
 import 'package:event_app/components/home_screen/event_list_card.dart';
 import 'package:event_app/components/home_screen/featured_event_card.dart';
 import 'package:event_app/components/home_screen/section_title_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,13 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomAppBar(),
         appBar: customAppBar(
           title: "Home",
           context: this.context,
           leadingIcon: Icons.menu,
           leadingOnTap: () {
-            // TODO Implement OnTap
+            // TODO CHANGE Implement OnTap
+            FirebaseAuth.instance.signOut();
           },
         ),
         body: Padding(
