@@ -1,8 +1,9 @@
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/controllers/user_controller.dart';
 import 'package:event_app/helpers/form_validators.dart';
-import 'package:event_app/helpers/utils.dart';
+import 'package:event_app/helpers/custom_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,11 +27,10 @@ class _SignInScreenState extends State<SignInScreen> {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 
-
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
+          password: _passwordController.text.trim()).then((value) => UserController.getCurrentUserDetail());
     } on FirebaseAuthException catch (e) {
       Utils.showErrorSnackBar(e.message);
     }
@@ -41,7 +41,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
-    isRememberMeChecked = false;
   }
 
   @override
@@ -55,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
+            child: Wrap(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -76,25 +75,27 @@ class _SignInScreenState extends State<SignInScreen> {
                           inputController: _emailController,
                           hintText: "Your Email",
                           labelText: "Email",
-                          prefixIcon: Icons.mail_outlined,
+                          // prefixIcon: Icons.mail_outlined,
                           filledColor: fillColor,
                           borderRadius: 25,
                           enabledBorderColor: enabledBorderColor,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => FormValidators.emailValidator(value),
+                          validator: (value) =>
+                              FormValidators.emailValidator(value),
                         ),
 
                         // Password TextInput
                         CustomTextField(
                           inputController: _passwordController,
                           labelText: "Password",
-                          prefixIcon: Icons.lock_outlined,
+                          // prefixIcon: Icons.lock_outlined,
                           obsecureText: true,
                           filledColor: fillColor,
                           borderRadius: 25,
                           enabledBorderColor: enabledBorderColor,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => FormValidators.passwordValidator(value),
+                          validator: (value) =>
+                              FormValidators.passwordValidator(value),
                         ),
 
                         // Forget Password and remember me section

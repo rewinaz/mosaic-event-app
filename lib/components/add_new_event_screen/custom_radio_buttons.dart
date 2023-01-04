@@ -13,14 +13,17 @@ class CustomRadioButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
       children: [
-        // RadioListTile(
-        //   value: value,
-        //   groupValue: groupValue,
-        //   title: Text("Private"),
-        //   onChanged: (val) => {onChanged()},
-        // ),
+        Container(
+          width: 50,
+          child: RadioListTile(
+            value: value,
+            groupValue: groupValue,
+            title: Text("Private"),
+            onChanged: (val) => {onChanged()},
+          ),
+        )
       ],
     );
   }

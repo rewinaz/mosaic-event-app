@@ -1,12 +1,12 @@
-class User {
+class UserModel {
   String fullName, email, imageLink, phoneNumber;
-  DateTime dateCreated;
+  String docId;
 
-  User({
+  UserModel({
     required this.fullName,
     required this.email,
     required this.imageLink,
     required this.phoneNumber,
-    required this.dateCreated,
+    required this.docId,
   });
 }

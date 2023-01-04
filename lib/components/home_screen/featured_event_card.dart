@@ -1,75 +1,84 @@
+import 'package:event_app/models/event_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FeaturedEventCard extends StatelessWidget {
-  String imagePath, eventTitle, eventDescription, eventDate;
+  EventModel data;
+  Function onTap;
   FeaturedEventCard({
     Key? key,
-    required this.imagePath,
-    required this.eventTitle,
-    required this.eventDescription,
-    required this.eventDate,
-  }) : super(
-          key: key,
-        );
+    required this.data,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = 350.0;
-    return Padding(
-      padding: const EdgeInsets.only(right: 15.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Padding(
+        padding: const EdgeInsets.only(right: 15.0),
         child: Container(
-          width: cardWidth,
-          color: Colors.white,
-          child: Column(
-            children: [
-              // Image
-              SizedBox(
-                height: 200,
-                width: cardWidth,
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                ),
-              ),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Container(
+              width: cardWidth,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  // Image
+                  SizedBox(
+                    height: 200,
+                    width: cardWidth,
+                    child: Image.network(
+                      data.images.first,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
 
-              // Event Information
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Name and Location
-                    Column(
+                  // Event Information
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          eventTitle,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        // Name and Location
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data.eventName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              data.category,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
                         ),
+                        // Date
                         Text(
-                          eventDescription,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
+                          DateFormat("E, d MMM yyy AT HH:MM")
+                              .format(data.startDate),
+                          textAlign: TextAlign.right,
+                        )
                       ],
                     ),
-                    // Date
-                    Text(
-                      eventDate,
-                      textAlign: TextAlign.right,
-                    )
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

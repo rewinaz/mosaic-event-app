@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
+import 'package:event_app/controllers/user_controller.dart';
+import 'package:event_app/helpers/firebase_helpers.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/get_image_from_gallery.dart';
-import 'package:event_app/helpers/utils.dart';
+import 'package:event_app/helpers/custom_snack_bar.dart';
 import 'package:event_app/screens/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -64,19 +66,21 @@ class _SignupScreenState extends State<SignupScreen> {
         (value) async {
           String imageUrl = "";
           if (profilePicture != null) {
-            imageUrl = await uploadFileToFireStore(
+            imageUrl = await FirebaseHelperFunctions.uploadFileToFireStore(
               File(profilePicture!.path),
               "profile_pictures",
               profilePicture!.name,
             );
           }
 
-          saveUserDataToFireStore(
+          UserController.saveUserDataToFireStore(
             fullName: _fullNameController.text.trim(),
             email: _emailController.text.trim(),
             phoneNumber: _phoneController.text.trim(),
             imageLink: imageUrl,
           );
+
+          
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -84,37 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  saveUserDataToFireStore(
-      {required String fullName,
-      required String email,
-      required phoneNumber,
-      required String imageLink}) {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference users = FirebaseFirestore.instance.collection("users");
-
-    users
-        .add({
-          "fullName": fullName,
-          "email": email,
-          "phone": phoneNumber,
-          "imageLink": imageLink,
-        })
-        .then((value) => Utils.showSuccessSnackBar("User Added Successfully."))
-        .catchError((error) => Utils.showErrorSnackBar(
-            "There was an error when adding the user."));
-  }
-
-  Future<String> uploadFileToFireStore(
-      File file, String folderName, String fileName) async {
-    String path = "$folderName/$fileName";
-    final ref = FirebaseStorage.instance.ref().child(path);
-
-    UploadTask uploadTask = ref.putFile(file);
-    final snapshot = await uploadTask.whenComplete(() {});
-
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
+  
 
   @override
   void initState() {

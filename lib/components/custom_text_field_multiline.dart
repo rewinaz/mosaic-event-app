@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:ffi';
 
-class CustomTextField extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class CustomMultiLineTextField extends StatelessWidget {
   TextEditingController inputController;
   String? labelText, hintText, errorText;
   IconData? prefixIcon;
@@ -9,12 +10,10 @@ class CustomTextField extends StatelessWidget {
   TextInputAction? textInputAction;
   Color? borderColor, focusedBorderColor, enabledBorderColor, filledColor;
   double? borderRadius;
-  bool? obsecureText, readOnly, autoFocus;
   AutovalidateMode? autovalidateMode;
   String? Function(String? value)? validator;
-  Function? onTap;
 
-  CustomTextField({
+  CustomMultiLineTextField({
     super.key,
     required this.inputController,
     this.hintText,
@@ -28,27 +27,18 @@ class CustomTextField extends StatelessWidget {
     this.enabledBorderColor,
     this.filledColor,
     this.borderRadius,
-    this.obsecureText,
     this.autovalidateMode,
     this.validator,
-    this.readOnly,
-    this.onTap,
-    this.autoFocus,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      width: double.infinity,
       child: TextFormField(
-        autofocus: autoFocus ?? false,
-        onTap: () => onTap != null ? onTap!() : "",
         controller: inputController,
         keyboardType: textInputType ?? TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
-        obscureText: obsecureText ?? false,
-        readOnly: readOnly ?? false,
         decoration: InputDecoration(
           filled: filledColor != null ? true : false,
           fillColor: filledColor ?? Colors.transparent,
@@ -79,9 +69,11 @@ class CustomTextField extends StatelessWidget {
           errorText: errorText,
         ),
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
-        validator: validator == null
-            ? (value) => null
-            : (value) => validator!(value),
+        validator:
+            validator == null ? (value) => null : (value) => validator!(value),
+        // expands: true,
+        minLines: 5,
+        maxLines: 10,
       ),
     );
   }

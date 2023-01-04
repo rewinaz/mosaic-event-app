@@ -28,11 +28,6 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
   Color defaultBorderColor = Colors.white;
   double defaultBorderRadius = 40;
 
-  @override
-  void initState() {
-    selectedItem = widget.items[0];
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +39,12 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
     );
 
     return DropdownButtonFormField<String>(
-      value: selectedItem,
+      hint: Text(
+        widget.hintText,
+        style: TextStyle(
+          color: Colors.black54,
+        ),
+      ),
       items: widget.items
           .map((item) => DropdownMenuItem<String>(
               value: item,
@@ -58,10 +58,6 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         setState(() => {selectedItem = value});
       },
       decoration: InputDecoration(
-        hintText: widget.hintText,
-        hintStyle: const TextStyle(
-          color: Colors.black,
-        ),
         filled: true,
         fillColor: widget.fillColor ?? Colors.white,
         border: borderStyle,

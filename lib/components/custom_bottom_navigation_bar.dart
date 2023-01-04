@@ -35,7 +35,7 @@ class CustomBottomAppBar extends StatelessWidget {
         ),
         PandaBarButtonData(
           id: 2,
-          icon: Icons.space_dashboard_rounded,
+          icon: Icons.dashboard_customize,
           title: 'Dashboard',
         ),
         PandaBarButtonData(

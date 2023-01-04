@@ -1,9 +1,9 @@
 import 'package:event_app/firebase_options.dart';
-import 'package:event_app/helpers/utils.dart';
-import 'package:event_app/screens/auth_screen.dart';
-import 'package:event_app/screens/home_screen.dart';
-import 'package:event_app/screens/signin_screen.dart';
-import 'package:event_app/screens/signup_screen.dart';
+import 'package:event_app/helpers/custom_snack_bar.dart';
+import 'package:event_app/models/event_model.dart';
+import 'package:event_app/screens/auth.dart';
+import 'package:event_app/screens/checkout_screen.dart';
+import 'package:event_app/screens/dashboard_page.dart';
 import 'package:event_app/screens/wrapper_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +35,24 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return WrapperScreen();
+            // return CheckoutScreen(
+            //   data: EventModel(
+            //     eventName: "eventName",
+            //     category: "category",
+            //     venueName: "venueName",
+            //     venueAddress: "venueAddress",
+            //     description: "description",
+            //     isActive: false,
+            //     isFeatured: false,
+            //     quantity: 500,
+            //     price: 499,
+            //     startDate: DateTime.now(),
+            //     endDate: DateTime.now(),
+            //     images: [],
+            //     postedBy: "postedBy",
+            //   ),
+            // );
+            // return EventDetailScreen();
           } else {
             return AuthScreen();
           }

@@ -48,4 +48,14 @@ class FormValidators {
     }
     return null;
   }
+
+  static String? isEmpty(String? value) {
+    if (value == null) {
+      return "Field can't be empty";
+    } else {
+      return value.trim().length < 1
+          ? "This input must be at least 1 characters"
+          : null;
+    }
+  }
 }

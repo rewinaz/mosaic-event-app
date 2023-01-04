@@ -24,19 +24,6 @@ class SectionTitleBar extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              onTap();
-            },
-            child: const Text(
-              "View All +",
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
         ],
       ),
     );

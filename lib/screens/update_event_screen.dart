@@ -1,15 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/add_new_event_screen/custom_event_image_selector_wrapper.dart';
-import 'package:event_app/components/add_new_event_screen/custom_radio_buttons.dart';
 import 'package:event_app/components/custom_app_bar.dart';
-import 'package:event_app/components/custom_bottom_navigation_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_datetime_selector.dart';
 import 'package:event_app/components/custom_dropdown_selector.dart';
 import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/components/custom_text_field_multiline.dart';
 import 'package:event_app/controllers/event_controller.dart';
-import 'package:event_app/controllers/user_controller.dart';
 import 'package:event_app/helpers/date_selection_function.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
@@ -19,14 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class AddNewEventScreen extends StatefulWidget {
-  const AddNewEventScreen({super.key});
+class UpdateEventScreen extends StatefulWidget {
+  EventModel data;
+  UpdateEventScreen({super.key, required this.data});
 
   @override
-  State<AddNewEventScreen> createState() => _AddNewEventScreenState();
+  State<UpdateEventScreen> createState() => _UpdateEventScreenState();
 }
 
-class _AddNewEventScreenState extends State<AddNewEventScreen> {
+class _UpdateEventScreenState extends State<UpdateEventScreen> {
   final newEventFormKey = GlobalKey<FormState>();
   final TextEditingController _eventTitleController = TextEditingController();
   final TextEditingController _venueNameController = TextEditingController();
@@ -44,11 +41,12 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
   Color inputBorderColor = Colors.white;
   double inputBorderRadius = 30.0;
 
-  // List<String> categories = ["Food", "Music", "Movie"];
-  List<String> categories = [];
+  List<String> categories = ["Food", "Music", "Movie"];
   List<XFile> selectedImages = [];
   DateTime? startDate, endDate, startTime, endTime;
   String? selectedCategory;
+  List oldImages = [];
+  int uploadSize = 5;
 
   getStartDate(TextEditingController controller) async {
     DateTime? date = await DateTimeUtils.getDateFromUser(context);
@@ -116,7 +114,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
       return Utils.showErrorSnackBar("Please Select at least one image.");
     }
 
-    EventController.saveEventToFireStore(
+    EventController.updateEvent(
       EventModel(
         eventName: _eventTitleController.text.trim(),
         category: selectedCategory ?? "",
@@ -137,23 +135,6 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
     );
   }
 
-  // @override
-  // void dispose() {
-  //   // Clean up the controller when the widget is disposed.
-  //   _eventTitleController.dispose();
-  //   _startingDateController.dispose();
-  //   _endDateController.dispose();
-  //   _startingTimeController.dispose();
-  //   _endTimeController.dispose();
-  //   _descriptionController.dispose();
-
-  //   _venueNameController.dispose();
-  //   _venueAddressController.dispose();
-  //   _quantityController.dispose();
-  //   _priceController.dispose();
-  //   super.dispose();
-  // }
-
   setCategories(List<String> categoriesList) {
     setState(() {
       categories = categoriesList;
@@ -162,8 +143,25 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
 
   @override
   void initState() {
-    super.initState();
     EventController.getAllCategories(setCategories);
+    _eventTitleController.text = widget.data.eventName;
+    _venueNameController.text = widget.data.venueName;
+    _venueAddressController.text = widget.data.venueAddress;
+    _priceController.text = widget.data.price.toString();
+    _descriptionController.text = widget.data.description;
+    _quantityController.text = widget.data.quantity.toString();
+    _startingDateController.text =
+        DateFormat.yMd().format(widget.data.startDate);
+    _startingTimeController.text =
+        DateFormat.Hm().format(widget.data.startDate);
+    _endDateController.text = DateFormat.yMd().format(widget.data.endDate);
+    _endTimeController.text = DateFormat.Hm().format(widget.data.endDate);
+
+    selectedCategory = widget.data.category;
+    oldImages = widget.data.images;
+    selectedImages = [];
+    uploadSize = 5 - selectedImages.length;
+    super.initState();
   }
 
   @override
@@ -171,7 +169,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
     return Scaffold(
       appBar: customAppBar(
           context: context,
-          title: "Create New Event",
+          title: "Update Event",
           leadingIcon: Icons.arrow_back_ios_new_rounded,
           leadingOnTap: () {
             Navigator.pop(context);
@@ -268,9 +266,8 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
 
                   // TODO Event Image Selector And Display Custom
                   CustomImageSelector(
-                    onNewImageAdded: setSelectedImages,
-                    uploadSize: 5,
-                  ),
+                      onNewImageAdded: setSelectedImages,
+                      uploadSize: uploadSize),
 
                   // TODO Event Description Text Input
                   CustomMultiLineTextField(
@@ -318,21 +315,9 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  // TODO PREVIEW Button
-                  CustomButton(
-                    buttonText: "Preview",
-                    buttonOnClick: () {
-                      // TODO: HANDLE PREVIEW
-                    },
-                    isFilled: false,
-                  ),
-
-                  const SizedBox(
-                    height: 15,
-                  ),
                   // TODO POST Button
                   CustomButton(
-                    buttonText: "Post Now",
+                    buttonText: "Update",
                     buttonOnClick: () {
                       postNowButtonOnTapHandler();
                       Navigator.pop(context);

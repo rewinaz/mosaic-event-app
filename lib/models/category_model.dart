@@ -1,9 +1,9 @@
-class User {
+class Category {
   String categoryName, imageLink;
   bool isActive, isFeatured;
   DateTime dateCreated;
 
-  User({
+  Category({
     required this.categoryName,
     required this.imageLink,
     required this.isActive,

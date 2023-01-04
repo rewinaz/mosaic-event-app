@@ -1,8 +1,10 @@
 import 'package:event_app/components/custom_bottom_navigation_bar.dart';
+import 'package:event_app/controllers/user_controller.dart';
 import 'package:event_app/screens/add_new_event_screen.dart';
-import 'package:event_app/screens/dashboard_screen.dart';
-import 'package:event_app/screens/home_screen.dart';
-import 'package:event_app/screens/profile_screen.dart';
+import 'package:event_app/screens/dashboard_page.dart';
+import 'package:event_app/screens/explore_page.dart';
+import 'package:event_app/screens/home_page.dart';
+import 'package:event_app/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class WrapperScreen extends StatefulWidget {
@@ -13,9 +15,9 @@ class WrapperScreen extends StatefulWidget {
 }
 
 class _WrapperScreenState extends State<WrapperScreen> {
-  final List<Widget> screens = [
+  final List<Widget> screens = const [
     HomeScreen(),
-    AddNewEventScreen(),
+    ExploreScreen(),
     DashboardScreen(),
     ProfileScreen(),
   ];
@@ -25,6 +27,13 @@ class _WrapperScreenState extends State<WrapperScreen> {
     setState(() {
       currentPageIndex = selectedPageIndex;
     });
+  }
+
+   @override
+  void initState() {
+    UserController.getCurrentUserDetail();
+
+    super.initState();
   }
 
   @override
