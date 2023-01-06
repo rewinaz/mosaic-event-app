@@ -5,7 +5,6 @@ import 'package:event_app/components/home_screen/section_title_bar.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/screens/event_detail_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,18 +43,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 element.isFeatured == true &&
                                 element.isActive == true)
                             .toList();
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: filteredEvents.length,
-                            itemBuilder: (context, index) => FeaturedEventCard(
-                                  data: filteredEvents[index],
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EventDetailScreen(
-                                            data: filteredEvents[index])),
-                                  ),
-                                ));
+                        return filteredEvents.length > 0
+                            ? ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: filteredEvents.length,
+                                itemBuilder: (context, index) =>
+                                    FeaturedEventCard(
+                                      data: filteredEvents[index],
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EventDetailScreen(
+                                                    data:
+                                                        filteredEvents[index])),
+                                      ),
+                                    ))
+                            : Center(
+                                child: Text(
+                                    "There is no featured event at the moment."));
                       } else {
                         return Center(
                           child: CircularProgressIndicator(),

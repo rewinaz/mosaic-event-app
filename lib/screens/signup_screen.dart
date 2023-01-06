@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
@@ -9,10 +7,7 @@ import 'package:event_app/helpers/firebase_helpers.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/get_image_from_gallery.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
-import 'package:event_app/screens/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

@@ -5,6 +5,7 @@ import 'package:event_app/components/custom_datetime_selector.dart';
 import 'package:event_app/components/custom_dropdown_selector.dart';
 import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/components/custom_text_field_multiline.dart';
+import 'package:event_app/components/update_event_screen/custom_update_event_screen_image_display_wrapper.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/helpers/date_selection_function.dart';
 import 'package:event_app/helpers/form_validators.dart';
@@ -45,8 +46,9 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   List<XFile> selectedImages = [];
   DateTime? startDate, endDate, startTime, endTime;
   String? selectedCategory;
-  List oldImages = [];
   int uploadSize = 5;
+  List oldImages = [];
+  List removedImages = [];
 
   getStartDate(TextEditingController controller) async {
     DateTime? date = await DateTimeUtils.getDateFromUser(context);
@@ -94,10 +96,25 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   }
 
   setSelectedImages(List<XFile> images) {
-    selectedImages = images;
+    setState(() {
+      selectedImages = images;
+    });
   }
 
-  postNowButtonOnTapHandler() {
+  setNetworkImages(List networkImages, List removedImages) {
+    setState(() {
+      oldImages = networkImages;
+    });
+    setRemovedImages(removedImages);
+  }
+
+  setRemovedImages(List removedImageLinks) {
+    setState(() {
+      removedImages = removedImageLinks;
+    });
+  }
+
+  postNowButtonOnTapHandler(BuildContext context) {
     final isValid = newEventFormKey.currentState!.validate();
     if (!isValid) return;
 
@@ -110,19 +127,20 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         endTime == null) {
       return Utils.showErrorSnackBar("Please fill all dates.");
     }
-    if (selectedImages.length < 1) {
+    if (selectedImages.length < 1 && oldImages.length < 1) {
       return Utils.showErrorSnackBar("Please Select at least one image.");
     }
 
     EventController.updateEvent(
       EventModel(
+        docId: widget.data.docId,
         eventName: _eventTitleController.text.trim(),
         category: selectedCategory ?? "",
         venueName: _venueNameController.text.trim(),
         venueAddress: _venueAddressController.text.trim(),
         description: _descriptionController.text.trim(),
-        isActive: false,
-        isFeatured: false,
+        isActive: widget.data.isActive,
+        isFeatured: widget.data.isActive,
         quantity: int.parse(_quantityController.text.trim()),
         price: double.parse(_priceController.text.trim()),
         startDate: DateTimeUtils.getDateTimeFromTimeAndDate(
@@ -132,7 +150,12 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         images: selectedImages,
         postedBy: currentUser.docId,
       ),
+      oldImages,
+      removedImages,
     );
+
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   setCategories(List<String> categoriesList) {
@@ -158,9 +181,20 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
     _endTimeController.text = DateFormat.Hm().format(widget.data.endDate);
 
     selectedCategory = widget.data.category;
-    oldImages = widget.data.images;
+    oldImages = [];
+
+    for (var element in widget.data.images) {
+      oldImages.add(element);
+    }
+    oldImages = oldImages;
     selectedImages = [];
-    uploadSize = 5 - selectedImages.length;
+    uploadSize = 7 - oldImages.length;
+    removedImages = [];
+
+    startDate = widget.data.startDate;
+    startTime = widget.data.startDate;
+    endDate = widget.data.endDate;
+    endTime = widget.data.endDate;
     super.initState();
   }
 
@@ -168,12 +202,13 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          context: context,
-          title: "Update Event",
-          leadingIcon: Icons.arrow_back_ios_new_rounded,
-          leadingOnTap: () {
-            Navigator.pop(context);
-          }),
+        context: context,
+        title: "Update Event",
+        leadingIcon: Icons.arrow_back_ios_new_rounded,
+        leadingOnTap: () {
+          Navigator.pop(context);
+        },
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -265,9 +300,16 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                   ),
 
                   // TODO Event Image Selector And Display Custom
+                  oldImages.length > 0
+                      ? CustomNetworkImageDisplayWrapper(
+                          onRemove: setNetworkImages,
+                          networkImages: oldImages,
+                        )
+                      : Container(),
                   CustomImageSelector(
-                      onNewImageAdded: setSelectedImages,
-                      uploadSize: uploadSize),
+                    onNewImageAdded: setSelectedImages,
+                    uploadSize: uploadSize,
+                  ),
 
                   // TODO Event Description Text Input
                   CustomMultiLineTextField(
@@ -319,8 +361,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                   CustomButton(
                     buttonText: "Update",
                     buttonOnClick: () {
-                      postNowButtonOnTapHandler();
-                      Navigator.pop(context);
+                      postNowButtonOnTapHandler(context);
                     },
                   ),
                 ],

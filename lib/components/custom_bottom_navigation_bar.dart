@@ -1,7 +1,5 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:event_app/screens/add_new_event_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:pandabar/fab-button.view.dart';
 import 'package:pandabar/pandabar.dart';
 
 class CustomBottomAppBar extends StatelessWidget {

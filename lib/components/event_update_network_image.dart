@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class FetchedEventImage extends StatelessWidget {
   String imageSource;
   Function onTap;
-  FetchedEventImage({super.key, required this.imageSource, required this.onTap});
+  FetchedEventImage(
+      {super.key, required this.imageSource, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,8 @@ class FetchedEventImage extends StatelessWidget {
             child: Image.network(
               imageSource,
               fit: BoxFit.cover,
+              width: size,
+              height: size,
             ),
           ),
           GestureDetector(
@@ -35,6 +38,5 @@ class FetchedEventImage extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

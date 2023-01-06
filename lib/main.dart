@@ -1,9 +1,6 @@
 import 'package:event_app/firebase_options.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
-import 'package:event_app/models/event_model.dart';
 import 'package:event_app/screens/auth.dart';
-import 'package:event_app/screens/checkout_screen.dart';
-import 'package:event_app/screens/dashboard_page.dart';
 import 'package:event_app/screens/wrapper_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

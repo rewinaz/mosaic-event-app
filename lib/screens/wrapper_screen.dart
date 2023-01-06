@@ -1,6 +1,5 @@
 import 'package:event_app/components/custom_bottom_navigation_bar.dart';
 import 'package:event_app/controllers/user_controller.dart';
-import 'package:event_app/screens/add_new_event_screen.dart';
 import 'package:event_app/screens/dashboard_page.dart';
 import 'package:event_app/screens/explore_page.dart';
 import 'package:event_app/screens/home_page.dart';
@@ -29,10 +28,9 @@ class _WrapperScreenState extends State<WrapperScreen> {
     });
   }
 
-   @override
+  @override
   void initState() {
     UserController.getCurrentUserDetail();
-
     super.initState();
   }
 

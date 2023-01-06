@@ -6,10 +6,15 @@ import 'package:event_app/screens/update_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PosterUserScreen extends StatelessWidget {
+class PosterUserScreen extends StatefulWidget {
   EventModel data;
   PosterUserScreen({super.key, required this.data});
 
+  @override
+  State<PosterUserScreen> createState() => _PosterUserScreenState();
+}
+
+class _PosterUserScreenState extends State<PosterUserScreen> {
   @override
   Widget build(BuildContext context) {
     Widget cancelButton = TextButton(
@@ -22,7 +27,7 @@ class PosterUserScreen extends StatelessWidget {
       child: Text("Yes"),
       onPressed: () {
         Navigator.of(context).pop();
-        EventController.removeEvent(data.docId!);
+        EventController.removeEvent(widget.data.docId!);
         Navigator.pop(context);
       },
     );
@@ -38,6 +43,8 @@ class PosterUserScreen extends StatelessWidget {
         continueButton,
       ],
     );
+    print("POSTER DATA");
+    print(widget.data.images);
 
     return Scaffold(
       body: SafeArea(
@@ -49,7 +56,7 @@ class PosterUserScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    data.images.first,
+                    widget.data.images.first,
                     width: double.infinity,
                     height: 500,
                     fit: BoxFit.cover,
@@ -67,7 +74,7 @@ class PosterUserScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        data.eventName,
+                        widget.data.eventName,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w900,
@@ -78,16 +85,18 @@ class PosterUserScreen extends StatelessWidget {
                           icon: Icons.calendar_month,
                           title: "Today",
                           subTitle:
-                              "${DateFormat("E, MMM d yyyy ( HH:mm )").format(data.startDate)} - ${DateFormat("E, MMM d yyyy ( HH:mm )").format(data.endDate)}"),
+                              "${DateFormat("E, MMM d yyyy ( HH:mm )").format(widget.data.startDate)} - ${DateFormat("E, MMM d yyyy ( HH:mm )").format(widget.data.endDate)}"),
                       InfoCardWithIcon(
                         icon: Icons.attach_money_rounded,
-                        title: data.price > 0 ? "${data.price} BR" : "FREE",
+                        title: widget.data.price > 0
+                            ? "${widget.data.price} BR"
+                            : "FREE",
                         subTitle: "Entrance Fee",
                       ),
                       InfoCardWithIcon(
                         icon: Icons.location_on,
-                        title: data.venueName,
-                        subTitle: data.venueAddress,
+                        title: widget.data.venueName,
+                        subTitle: widget.data.venueAddress,
                       ),
                       const SizedBox(
                         height: 10,
@@ -113,7 +122,7 @@ class PosterUserScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        UpdateEventScreen(data: data))),
+                                        UpdateEventScreen(data: widget.data))),
                           ),
                         ],
                       ),
@@ -136,7 +145,7 @@ class PosterUserScreen extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        data.description,
+                        widget.data.description,
                         softWrap: true,
                         maxLines: 100,
                         textAlign: TextAlign.left,

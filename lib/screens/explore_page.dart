@@ -1,12 +1,8 @@
 import 'package:event_app/components/custom_app_bar.dart';
-import 'package:event_app/components/custom_text_field.dart';
-import 'package:event_app/components/home_screen/category_card.dart';
 import 'package:event_app/components/home_screen/event_list_card.dart';
-import 'package:event_app/components/home_screen/section_title_bar.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/screens/event_detail_screen.dart';
-import 'package:event_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 

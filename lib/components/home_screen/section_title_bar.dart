@@ -27,6 +27,5 @@ class SectionTitleBar extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

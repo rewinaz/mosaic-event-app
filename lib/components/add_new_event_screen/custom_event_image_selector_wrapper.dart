@@ -1,5 +1,4 @@
 import 'package:event_app/components/custom_image_selector_item.dart';
-import 'package:event_app/components/event_update_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,12 +6,11 @@ import 'package:permission_handler/permission_handler.dart';
 class CustomImageSelector extends StatefulWidget {
   Function onNewImageAdded;
   int uploadSize;
-  List? networkImages;
-  CustomImageSelector(
-      {super.key,
-      required this.onNewImageAdded,
-      required this.uploadSize,
-      this.networkImages});
+  CustomImageSelector({
+    super.key,
+    required this.onNewImageAdded,
+    required this.uploadSize,
+  });
 
   @override
   State<CustomImageSelector> createState() => _CustomImageSelectorState();

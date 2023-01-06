@@ -17,17 +17,17 @@ class TicketSuccessScreen extends StatelessWidget {
   EventModel event;
   String userId;
   int quantity;
-  TicketSuccessScreen(
-      {super.key,
-      required this.tickets,
-      required this.event,
-      required this.userId,
-      required this.quantity});
+  TicketSuccessScreen({
+    super.key,
+    required this.tickets,
+    required this.event,
+    required this.userId,
+    required this.quantity,
+  });
 
   @override
   Widget build(BuildContext context) {
     final _controller = ScreenshotController();
-    int i = quantity;
 
     Widget _buildImage(Widget el) {
       return Container(

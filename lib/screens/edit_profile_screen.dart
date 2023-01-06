@@ -5,7 +5,6 @@ import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/get_image_from_gallery.dart';
-import 'package:event_app/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,7 +21,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     final formKey = GlobalKey<FormState>();
     final TextEditingController _fullNameController = TextEditingController();
     final TextEditingController _phoneController = TextEditingController();
-    final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _confirmPasswordController =
         TextEditingController();
@@ -31,7 +29,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     final Color enabledBorderColor = const Color.fromRGBO(249, 249, 255, 1.0);
     final Color lightGray = const Color.fromRGBO(249, 249, 255, 1.0);
     final Color blueColor = const Color.fromRGBO(46, 137, 232, 1);
-    bool isTermsAgreed = false;
     XFile? profilePicture;
 
     getProfilePicture() async {
@@ -175,6 +172,5 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
         ),
       ),
     );
-    ;
   }
 }

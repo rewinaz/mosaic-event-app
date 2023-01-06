@@ -10,9 +10,14 @@ import 'package:event_app/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     showAlert(String? docId) {
@@ -70,64 +75,72 @@ class DashboardScreen extends StatelessWidget {
                           .where((element) =>
                               element.postedBy == currentUser.docId)
                           .toList();
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        primary: false,
-                        itemCount: filteredEvents.length,
-                        itemBuilder: (context, index) => Slidable(
-                          key: const ValueKey(0),
-                          startActionPane: ActionPane(
-                            motion: const BehindMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        showAlert(filteredEvents[index].docId),
-                                  );
-                                },
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete,
-                                label: 'Delete',
-                              ),
-                            ],
-                          ),
-                          endActionPane: ActionPane(
-                            motion: const StretchMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) {
-                                  Navigator.push(
+                      return filteredEvents.length > 0
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              primary: false,
+                              itemCount: filteredEvents.length,
+                              itemBuilder: (context, index) => Slidable(
+                                key: const ValueKey(0),
+                                startActionPane: ActionPane(
+                                  motion: const BehindMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => showAlert(
+                                              filteredEvents[index].docId),
+                                        );
+                                      },
+                                      backgroundColor: Colors.redAccent,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                  ],
+                                ),
+                                endActionPane: ActionPane(
+                                  motion: const StretchMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UpdateEventScreen(
+                                              data: filteredEvents[index],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      backgroundColor: Colors.blue,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.bolt,
+                                      label: 'Update',
+                                    ),
+                                  ],
+                                ),
+                                child: EventListCard(
+                                  data: filteredEvents[index],
+                                  borderColor: filteredEvents[index].isActive
+                                      ? Colors.green
+                                      : Colors.redAccent,
+                                  onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => UpdateEventScreen(
+                                      builder: (context) => PosterUserScreen(
                                         data: filteredEvents[index],
                                       ),
                                     ),
-                                  );
-                                },
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                icon: Icons.bolt,
-                                label: 'Update',
-                              ),
-                            ],
-                          ),
-                          child: EventListCard(
-                            data: filteredEvents[index],
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PosterUserScreen(
-                                  data: filteredEvents[index],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
+                            )
+                          : Center(
+                              child: Text("You haven't posted any events."),
+                            );
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),

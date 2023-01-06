@@ -1,6 +1,5 @@
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_text_field.dart';
-import 'package:event_app/components/home_screen/event_list_card.dart';
 import 'package:flutter/material.dart';
 
 class SearchResultsScreen extends StatelessWidget {

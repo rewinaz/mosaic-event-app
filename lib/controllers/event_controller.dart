@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
 import 'package:event_app/helpers/firebase_helpers.dart';
 import 'package:event_app/models/event_model.dart';
-import 'package:event_app/variables.dart';
 
 class EventController {
   static saveEventToFireStore(EventModel eventModel) async {
@@ -103,9 +102,37 @@ class EventController {
     event.delete();
   }
 
-  static updateEvent(EventModel model) {
+  static updateEvent(
+    EventModel model,
+    List oldImages,
+    List removedImages,
+  ) async {
+    // TODO Upload Files
+    List imageUrls = oldImages;
+    for (var image in model.images) {
+      if (image != null) {
+        imageUrls.add(await FirebaseHelperFunctions.uploadFileToFireStore(
+          File(image!.path),
+          "event_pictures",
+          image!.name,
+        ));
+      }
+    }
+
+    for (var imgLink in removedImages) {
+      if (imgLink != null) {
+        FirebaseHelperFunctions.removeImageFromFirestore(imgLink);
+      }
+    }
+
+    if (imageUrls.isEmpty) {
+      Utils.showErrorSnackBar("An Error Occurred while uploading pictures");
+      return;
+    }
+
     final event =
         FirebaseFirestore.instance.collection('events').doc(model.docId);
+
     event.update({
       'eventName': model.eventName,
       'category': model.category,
@@ -116,7 +143,7 @@ class EventController {
       'endDate': model.endDate,
       'isActive': model.isActive,
       'isFeatured': model.isFeatured,
-      'eventImages': model.images,
+      'eventImages': imageUrls,
       'quantity': model.quantity,
       'price': model.price,
       'postedBy': model.postedBy,

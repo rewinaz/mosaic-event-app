@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 class EventListCard extends StatelessWidget {
   Function onTap;
   EventModel data;
+  Color? borderColor;
   EventListCard({
     Key? key,
     required this.data,
     required this.onTap,
+    this.borderColor,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class EventListCard extends StatelessWidget {
         padding: const EdgeInsets.only(right: 20, bottom: 15),
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: borderColor ?? Colors.grey.shade300),
             borderRadius: BorderRadius.circular(15),
           ),
           child: ClipRRect(

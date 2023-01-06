@@ -1,15 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/add_new_event_screen/custom_event_image_selector_wrapper.dart';
-import 'package:event_app/components/add_new_event_screen/custom_radio_buttons.dart';
 import 'package:event_app/components/custom_app_bar.dart';
-import 'package:event_app/components/custom_bottom_navigation_bar.dart';
 import 'package:event_app/components/custom_button.dart';
 import 'package:event_app/components/custom_datetime_selector.dart';
 import 'package:event_app/components/custom_dropdown_selector.dart';
 import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/components/custom_text_field_multiline.dart';
 import 'package:event_app/controllers/event_controller.dart';
-import 'package:event_app/controllers/user_controller.dart';
 import 'package:event_app/helpers/date_selection_function.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
@@ -99,7 +95,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
     selectedImages = images;
   }
 
-  postNowButtonOnTapHandler() {
+  postNowButtonOnTapHandler(BuildContext context) {
     final isValid = newEventFormKey.currentState!.validate();
     if (!isValid) return;
 
@@ -135,6 +131,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
         postedBy: currentUser.docId,
       ),
     );
+    Navigator.pop(context);
   }
 
   // @override
@@ -334,8 +331,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                   CustomButton(
                     buttonText: "Post Now",
                     buttonOnClick: () {
-                      postNowButtonOnTapHandler();
-                      // Navigator.pop(context);
+                      postNowButtonOnTapHandler(context);
                     },
                   ),
                 ],
