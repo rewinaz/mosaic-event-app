@@ -315,17 +315,17 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                     validator: (value) => FormValidators.isEmpty(value),
                   ),
 
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  // const SizedBox(
+                  //   height: 15,
+                  // ),
                   // TODO PREVIEW Button
-                  CustomButton(
-                    buttonText: "Preview",
-                    buttonOnClick: () {
-                      // TODO: HANDLE PREVIEW
-                    },
-                    isFilled: false,
-                  ),
+                  // CustomButton(
+                  //   buttonText: "Preview",
+                  //   buttonOnClick: () {
+                  //     // TODO: HANDLE PREVIEW
+                  //   },
+                  //   isFilled: false,
+                  // ),
 
                   const SizedBox(
                     height: 15,
@@ -335,7 +335,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
                     buttonText: "Post Now",
                     buttonOnClick: () {
                       postNowButtonOnTapHandler();
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                     },
                   ),
                 ],

@@ -1,5 +1,7 @@
 import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button_rounded.dart';
+import 'package:event_app/screens/edit_profile_screen.dart';
+import 'package:event_app/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             SizedBox(
@@ -30,15 +32,15 @@ class ProfileScreen extends StatelessWidget {
                     child: SizedBox(
                       width: 90,
                       height: 90,
-                      child: Image.asset(
-                        "lib/assets/images/event_image.png",
+                      child: Image.network(
+                        currentUser.imageLink,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   SizedBox(height: 10),
-                  const Text(
-                    "Palmy Lounge",
+                  Text(
+                    currentUser.fullName,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w900,
@@ -62,7 +64,10 @@ class ProfileScreen extends StatelessWidget {
                 // ),
                 CustomButtonRounded(
                   buttonText: "Edit Profile",
-                  buttonOnClick: () {},
+                  buttonOnClick: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateUserScreen())),
                 )
               ],
             ),

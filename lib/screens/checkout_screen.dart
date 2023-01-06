@@ -2,8 +2,10 @@ import 'package:event_app/components/custom_app_bar.dart';
 import 'package:event_app/components/custom_button_rounded.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
+import 'package:event_app/screens/ticket_success_screen.dart';
 import 'package:event_app/variables.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   EventModel data;
@@ -22,6 +24,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   int quantity = 1;
+
+  List<Widget> tickets = [];
+
+  getTickets({
+    required int quantity,
+    required EventModel event,
+    required String userId,
+  }) {
+    for (var i = 0; i < this.quantity; i++) {
+      tickets.add(
+        QrImage(
+            data: "${event.docId}.${userId}.${event.quantity - i}",
+            version: QrVersions.auto,
+            size: 320,
+            gapless: false,
+            embeddedImageStyle: QrEmbeddedImageStyle(
+              size: const Size(80, 80),
+            )),
+      );
+    }
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TicketSuccessScreen(
+                  tickets: tickets,
+                  event: event,
+                  userId: userId,
+                  quantity: this.quantity,
+                )));
+  }
 
   @override
   void initState() {
@@ -176,7 +208,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   EventController.buyTicket(
                       userId: currentUser.docId,
                       event: widget.data,
-                      quantitySold: quantity);
+                      quantitySold: quantity,
+                      followUp: getTickets(
+                        quantity: quantity,
+                        event: widget.data,
+                        userId: currentUser.docId,
+                      ));
                 },
               )
             ],

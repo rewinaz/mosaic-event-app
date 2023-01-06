@@ -124,11 +124,12 @@ class EventController {
         (value) => Utils.showSuccessSnackBar("Event Updated Successfully."));
   }
 
-  static buyTicket(
-      {required String userId,
-      required EventModel event,
-      required int quantitySold,
-      Function? followUp}) {
+  static buyTicket({
+    required String userId,
+    required EventModel event,
+    required int quantitySold,
+    Function? followUp,
+  }) {
     final salesCollection = FirebaseFirestore.instance.collection('sales').add({
       'eventId': event.docId,
       'price': event.price,

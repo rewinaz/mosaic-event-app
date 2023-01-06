@@ -28,9 +28,11 @@ class _SignInScreenState extends State<SignInScreen> {
     if (!isValid) return;
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim()).then((value) => UserController.getCurrentUserDetail());
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim())
+          .then((value) => UserController.getCurrentUserDetail());
     } on FirebaseAuthException catch (e) {
       Utils.showErrorSnackBar(e.message);
     }
@@ -138,33 +140,32 @@ class _SignInScreenState extends State<SignInScreen> {
                   isFilled: true,
                 ),
 
-                const SizedBox(
-                  height: 20,
-                ),
-
                 // Don't Have an account section
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: widget.onClickedSignUp,
-                      child: const Text(
-                        " Sign Up",
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
                         style: TextStyle(
                           fontSize: 18,
-                          color: Color.fromRGBO(46, 136, 232, 1),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  ],
+                      GestureDetector(
+                        onTap: widget.onClickedSignUp,
+                        child: const Text(
+                          " Sign Up",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromRGBO(46, 136, 232, 1),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),

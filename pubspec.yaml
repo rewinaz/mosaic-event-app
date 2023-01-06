@@ -48,10 +48,25 @@ dependencies:
   pandabar: ^0.1.2
   tab_indicator_styler: ^2.0.0
   flutter_slidable: ^2.0.0
+  qr_flutter: ^4.0.0
+  screenshot: ^1.3.0
+  pdf: ^1.3.13
+  image_gallery_saver: ^1.7.1
+  share_plus: ^6.3.0
+  path_provider: ^2.0.11
+  flutter_local_notifications: ^13.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.11.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/images/launcher.png"
+  adaptive_icon_background: "#FFECEC"
+  adaptive_icon_foreground: "lib/assets/launcher.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
