@@ -9,9 +9,11 @@ class CustomBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PandaBar(
+      
       onChange: (selectedPage) => {onChange(selectedPage)},
       fabIcon: Icon(Icons.add_outlined),
       onFabButtonPressed: () {
+        
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -42,7 +42,6 @@ class TicketSuccessScreen extends StatelessWidget {
       ].request();
 
       final info = statuses[Permission.storage].toString();
-      print(info);
     }
 
     saveImage(Uint8List byteData) async {
@@ -120,7 +119,6 @@ class TicketSuccessScreen extends StatelessWidget {
 
                               if (image == null) return;
 
-                              print(image);
                               await saveImage(image);
                             },
                           ),
@@ -143,7 +141,6 @@ class TicketSuccessScreen extends StatelessWidget {
                                   .then((value) => image = value);
 
                               if (image == null) return;
-                              print("SHARE");
                               saveAndShare(image);
                             },
                           ),

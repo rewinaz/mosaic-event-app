@@ -29,7 +29,7 @@ AppBar customAppBar({
               child: Icon(
                 leadingIcon,
                 color: Colors.black,
-                size: 30,
+                size: 25,
               ),
             ),
           )

@@ -17,19 +17,21 @@ class _ExploreScreenState extends State<ExploreScreen>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    TabController _controller = TabController(length: 4, vsync: this);
-    List<String> categories = ["All", "Food", "Music", "Movie"];
+    int length = 5;
+    TabController _controller = TabController(length: length, vsync: this);
+    List<String> categories = ["All", "Featured", "Food", "Music", "Movie"];
 
-setCategories(List<String> categoriesList) {
+    setCategories(List<String> categoriesList) {
       setState(() {
         categories = categoriesList;
       });
     }
+
     @override
     void initState() {
       EventController.getAllCategories(setCategories);
       super.initState();
-      _controller = TabController(length: 4, vsync: this);
+      _controller = TabController(length: length, vsync: this);
     }
 
     return Scaffold(
@@ -46,34 +48,14 @@ setCategories(List<String> categoriesList) {
                 isScrollable: true,
                 indicatorColor: Colors.green,
                 tabs: [
-                  Tab(
-                    text: "All",
-                  ),
-                  Tab(
-                    text: "Food",
-                  ),
-                  Tab(
-                    text: "Music",
-                  ),
-                  Tab(
-                    text: "Movies",
-                  ),
+                  for (int i = 0; i < _controller.length; i++)
+                    Tab(
+                      text: categories[i],
+                    ),
                 ],
                 labelColor: Colors.black,
                 // add it here
-                // indicator: DotIndicator(
-                //   color: Colors.black,
-                //   distanceFromCenter: 16,
-                //   radius: 3,
-                //   paintingStyle: PaintingStyle.fill,
-                // ),
-                // indicator: RectangularIndicator(
-                //   bottomLeftRadius: 50,
-                //   bottomRightRadius: 50,
-                //   topLeftRadius: 50,
-                //   topRightRadius: 50,
-                //   paintingStyle: PaintingStyle.fill,
-                // ),
+
                 indicator: MaterialIndicator(
                   height: 5,
                   topLeftRadius: 0,
@@ -83,33 +65,45 @@ setCategories(List<String> categoriesList) {
                   tabPosition: TabPosition.bottom,
                 ),
               ),
-
               Expanded(
                 child: TabBarView(
                   controller: _controller,
                   children: [
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < _controller.length; i++)
                       StreamBuilder<List<EventModel>>(
                           stream: EventController.getAllEvents(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Text(
-                                  "Something went wrong! ${snapshot.error.toString()}");
+                                "Something went wrong! ${snapshot.error.toString()}",
+                              );
                             } else if (snapshot.hasData) {
                               final events = snapshot.data ?? [];
                               final category = i == 0 ? "" : categories[i];
                               List filteredEvents = [];
-                              i == 0
-                                  ? filteredEvents = events
+                              if (i < 2) {
+                                if (i == 0) {
+                                  filteredEvents = events
                                       .where(
                                         (element) => element.isActive == true,
                                       )
-                                      .toList()
-                                  : filteredEvents = events
-                                      .where((element) =>
-                                          element.isActive == true &&
-                                          element.category == category)
                                       .toList();
+                                } else {
+                                  filteredEvents = events
+                                      .where(
+                                        (element) =>
+                                            element.isActive == true &&
+                                            element.isFeatured == true,
+                                      )
+                                      .toList();
+                                }
+                              } else {
+                                filteredEvents = events
+                                    .where((element) =>
+                                        element.isActive == true &&
+                                        element.category == category)
+                                    .toList();
+                              }
                               return filteredEvents.length > 0
                                   ? ListView.builder(
                                       shrinkWrap: true,
@@ -140,81 +134,6 @@ setCategories(List<String> categoriesList) {
                   ],
                 ),
               )
-
-              // Content
-
-              // SectionTitleBar(
-              //   title: "Events",
-              //   onTap: () {},
-              // ),
-
-              // DefaultTabController(
-              //   length: 4,
-              //   child: TabBarView(
-              //     children: [
-              //       StreamBuilder<List<EventModel>>(
-              //           stream: EventController.getAllEvents(),
-              //           builder: (context, snapshot) {
-              //             if (snapshot.hasError) {
-              //               return Text(
-              //                   "Something went wrong! ${snapshot.error.toString()}");
-              //             } else if (snapshot.hasData) {
-              //               final events = snapshot.data ?? [];
-              //               final filteredEvents = events
-              //                   .where((element) => element.isActive == true)
-              //                   .toList();
-              //               return ListView.builder(
-              //                 shrinkWrap: true,
-              //                 primary: false,
-              //                 itemCount: filteredEvents.length,
-              //                 itemBuilder: (context, index) => EventListCard(
-              //                   data: filteredEvents[index],
-              //                   onTap: () => Navigator.push(
-              //                     context,
-              //                     MaterialPageRoute(
-              //                         builder: (context) => EventDetailScreen(
-              //                             data: filteredEvents[index])),
-              //                   ),
-              //                 ),
-              //               );
-              //             } else {
-              //               return Center(
-              //                 child: CircularProgressIndicator(),
-              //               );
-              //             }
-              //           }),
-              //     ],
-              //   ),
-              // ),
-
-              // TabBarView(
-              //   children: [
-              //     ListView.builder(
-              //   shrinkWrap: true,
-              //   primary: false,
-              //   itemCount: 10,
-              //   itemBuilder: (context, index) => EventListCard(
-              //     imagePath: "lib/assets/images/event_image.png",
-              //     title: "USA Singing Competition",
-              //     location: "Marina Hall, Toronto",
-              //     date: "Sun, May 2022, at 11:00 AM",
-              //     price: 100,
-              //     onTap: () {},
-              //   ),
-              // ),
-
-              // ListView.builder(
-              //   shrinkWrap: true,
-              //   primary: false,
-              //   itemCount: 10,
-              //   itemBuilder: (context, index) => EventListCard(
-              //     imagePath: "lib/assets/images/event_image.png",
-              //     title: "USA Singing Competition",
-              //     location: "Marina Hall, Toronto",
-              //     date: "Sun, May 2022, at 11:00 AM",
-              //     price: 100,
-              //     onTap: () {},
-              //   ),
             ],
           ),
         ),

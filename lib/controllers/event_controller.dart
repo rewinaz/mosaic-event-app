@@ -68,7 +68,6 @@ class EventController {
     List filteredDocs = [];
     for (var element in docs) {
       if (element["isFeatured"] == true) {
-        print(element);
         filteredDocs.add(element);
       }
     }

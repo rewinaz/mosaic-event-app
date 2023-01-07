@@ -19,7 +19,6 @@ class FirebaseHelperFunctions {
 
   static removeImageFromFirestore(String imageLink) async {
     final ref = FirebaseStorage.instance.refFromURL(imageLink);
-
 // Delete the file
     await ref.delete();
   }

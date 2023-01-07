@@ -43,8 +43,6 @@ class _PosterUserScreenState extends State<PosterUserScreen> {
         continueButton,
       ],
     );
-    print("POSTER DATA");
-    print(widget.data.images);
 
     return Scaffold(
       body: SafeArea(

@@ -15,7 +15,6 @@ class EventListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(data);
     return GestureDetector(
       onTap: () => onTap(),
       child: Padding(

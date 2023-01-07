@@ -4,6 +4,7 @@ import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/controllers/user_controller.dart';
 import 'package:event_app/helpers/form_validators.dart';
 import 'package:event_app/helpers/custom_snack_bar.dart';
+import 'package:event_app/screens/forget_password_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -102,30 +103,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
                         // Forget Password and remember me section
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                    value: isRememberMeChecked,
-                                    onChanged: (checked) => {
-                                          setState((() {
-                                            isRememberMeChecked =
-                                                !isRememberMeChecked;
-                                          }))
-                                        }),
-                                const Text(
-                                  "Remember me",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PasswordResetScreen()));
+                              },
+                              child: const Text(
+                                "Forget Password ?",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  decorationStyle: TextDecorationStyle.solid,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.blue,
                                 ),
-                              ],
-                            ),
-                            const Text(
-                              "Forget Password ?",
-                              style: TextStyle(
-                                fontSize: 14,
                               ),
                             )
                           ],

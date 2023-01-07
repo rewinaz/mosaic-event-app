@@ -52,6 +52,11 @@ class _SignupScreenState extends State<SignupScreen> {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 
+    if (profilePicture == null) {
+      Utils.showErrorSnackBar("Please select profile image.");
+      return;
+    }
+
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -74,16 +79,12 @@ class _SignupScreenState extends State<SignupScreen> {
             phoneNumber: _phoneController.text.trim(),
             imageLink: imageUrl,
           );
-
-          
         },
       );
     } on FirebaseAuthException catch (e) {
       Utils.showErrorSnackBar(e.message);
     }
   }
-
-  
 
   @override
   void initState() {

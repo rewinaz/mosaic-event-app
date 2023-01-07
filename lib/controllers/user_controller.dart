@@ -30,8 +30,6 @@ class UserController {
 
   static removeUser() {}
 
-  static updateUser() {}
-
   static getCurrentUserDetail() async {
     // TODO DO some fixes
     String? email = FirebaseAuth.instance.currentUser?.email;
@@ -53,6 +51,26 @@ class UserController {
         docId: docId,
       );
     });
-    print(doc);
+  }
+
+  static updateUser({
+    required String fullName,
+    required phoneNumber,
+    required String imageLink,
+    required String docId,
+  }) async {
+    final user = FirebaseFirestore.instance.collection('users').doc(docId);
+    await user
+        .update({
+          "fullName": fullName,
+          "imageLink": imageLink,
+          "phone": phoneNumber,
+        })
+        .then(
+            (value) => Utils.showSuccessSnackBar("User Updated Successfully."))
+        .catchError(
+            (error) => {Utils.showErrorSnackBar("Something went wrong.")});
+
+    UserController.getCurrentUserDetail();
   }
 }

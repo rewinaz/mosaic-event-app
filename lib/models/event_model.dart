@@ -44,8 +44,6 @@ class EventModel {
       };
 
   static EventModel fromJson(Map<String, dynamic> json, String docId) {
-    print("JSON");
-    print(json);
 
     return EventModel(
       eventName: json['eventName'],
