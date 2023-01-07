@@ -119,7 +119,7 @@ class _AddNewEventScreenState extends State<AddNewEventScreen> {
         venueName: _venueNameController.text.trim(),
         venueAddress: _venueAddressController.text.trim(),
         description: _descriptionController.text.trim(),
-        isActive: false,
+        isActive: true,
         isFeatured: false,
         quantity: int.parse(_quantityController.text.trim()),
         price: double.parse(_priceController.text.trim()),
