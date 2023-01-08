@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/components/custom_button_rounded.dart';
 import 'package:event_app/components/event_detail/info_text_with_icon.dart';
+import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
+import 'package:event_app/models/user_model.dart';
 import 'package:event_app/screens/checkout_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class EventDetailScreen extends StatelessWidget {
   EventModel data;
@@ -11,6 +17,8 @@ class EventDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PageController _pageController = PageController();
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -18,15 +26,54 @@ class EventDetailScreen extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    data.images.first,
-                    width: double.infinity,
-                    height: 500,
-                    fit: BoxFit.cover,
-                  ),
+                Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    SizedBox(
+                      height: 500,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: data.images.length,
+                        itemBuilder: (context, index) => ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            data.images[index],
+                            width: double.infinity,
+                            height: 500,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: const Alignment(0, 2),
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: SmoothPageIndicator(
+                        controller: _pageController,
+                        count: data.images.length,
+                        effect: const SlideEffect(
+                          spacing: 8.0,
+                          radius: 8.0,
+                          dotWidth: 20.0,
+                          dotHeight: 12.0,
+                          paintStyle: PaintingStyle.stroke,
+                          strokeWidth: 1.5,
+                          dotColor: Colors.blueAccent,
+                          activeDotColor: Colors.blueAccent,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
+                // ClipRRect(
+                //   borderRadius: BorderRadius.circular(20),
+                //   child: Image.network(
+                //     data.images.first,
+                //     width: double.infinity,
+                //     height: 500,
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
                 Container(
                   padding: const EdgeInsets.only(
                     left: 20,
@@ -67,17 +114,21 @@ class EventDetailScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomButtonRounded(
-                            buttonText: "Save",
-                            buttonOnClick: () {},
-                            backgroundColor: Colors.lightGreen, // height: 50
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
+                          // CustomButtonRounded(
+                          //   buttonText: "Save",
+                          //   buttonOnClick: () {},
+                          //   backgroundColor: Colors.lightGreen, // height: 50
+                          // ),
+                          // const SizedBox(
+                          //   width: 20,
+                          // ),
                           CustomButtonRounded(
                             buttonText: "Book Now",
-                            buttonOnClick: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen(data: data))),
+                            buttonOnClick: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CheckoutScreen(data: data))),
                           ),
                         ],
                       ),
@@ -122,36 +173,73 @@ class EventDetailScreen extends StatelessWidget {
                       // Profile
                       SizedBox(
                         width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: SizedBox(
-                                width: 90,
-                                height: 90,
-                                child: Image.asset(
-                                  "lib/assets/images/event_image.png",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            const Text(
-                              "Palmy Lounge",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 24,
-                              ),
-                            ),
-                          ],
-                        ),
+                        child: FutureBuilder<UserModel>(
+                            future: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(data.postedBy)
+                                .snapshots()
+                                .map((event) => UserModel(
+                                      fullName: event.get("fullName"),
+                                      imageLink: event.get("imageLink"),
+                                      phoneNumber: event.get("phone"),
+                                      email: event.get("email"),
+                                      docId: event.id,
+                                    ))
+                                .first,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                UserModel? postedBy = snapshot.data;
+                                print(postedBy?.imageLink);
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: SizedBox(
+                                        width: 90,
+                                        height: 90,
+                                        child: CachedNetworkImage(
+                                          useOldImageOnUrlChange: true,
+                                          imageUrl: postedBy?.imageLink ?? "",
+                                          placeholder: (context, url) =>
+                                              errorImage(),
+                                          errorWidget: (context, url, error) =>
+                                              errorImage(),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      postedBy?.fullName ?? "",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                        // const Text(
+                        //   "Palmy Lounge",
+                        //   style: TextStyle(
+                        //     color: Colors.black,
+                        //     fontWeight: FontWeight.w900,
+                        //     fontSize: 24,
+                        //   ),
+                        // ),
                       )
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -159,4 +247,20 @@ class EventDetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget errorImage() {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(50),
+    child: Container(
+      width: 90,
+      height: 90,
+      color: Colors.grey.shade300,
+      child: Icon(
+        Icons.person,
+        color: Colors.black,
+        size: 80,
+      ),
+    ),
+  );
 }

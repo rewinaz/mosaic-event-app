@@ -3,7 +3,6 @@ import 'package:event_app/components/home_screen/event_list_card.dart';
 import 'package:event_app/components/home_screen/section_title_bar.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
-import 'package:event_app/screens/event_detail_screen.dart';
 import 'package:event_app/screens/poster_user_screen.dart';
 import 'package:event_app/screens/update_event_screen.dart';
 import 'package:event_app/variables.dart';
@@ -59,6 +58,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
+              PageView(
+                children: [],
+              ),
               SectionTitleBar(title: "Posted Events", onTap: () {}),
               const SizedBox(
                 height: 15,

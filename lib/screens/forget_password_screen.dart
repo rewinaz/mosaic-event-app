@@ -26,10 +26,17 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(
-            email: _emailController.text.trim(),
-          )
-          .then((value) => Utils.showSuccessSnackBar(
-              "Password reset link has been sent to your email."));
+        email: _emailController.text.trim(),
+      )
+          .then((value) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: Text(
+                    "Password reset link has been sent to your email. If you didn't find it please check your spam folder.",
+                  ),
+                ));
+      });
     } on FirebaseAuthException catch (e) {
       Utils.showErrorSnackBar("Something went wrong please try again.");
     }

@@ -209,4 +209,27 @@ class EventController {
     callBack(myListString);
     return myListString;
   }
+
+
+  // static searchCategory(String searchKey) {
+  //   final eventsCollection =
+  //       FirebaseFirestore.instance.collection("events");
+  //   eventsCollection.where('eventName', isEqualTo: searchKey.trim()).get().then((snapshot) {
+  //     snapshot.docs;
+  //     String fullName = snapshot.docs.first.get("fullName");
+  //     String email = snapshot.docs.first.get("email");
+  //     String imageLink = snapshot.docs.first.get("imageLink");
+  //     String phoneNumber = snapshot.docs.first.get("phone");
+  //     String docId = snapshot.docs.first.id;
+
+
+  //     currentUser = UserModel(
+  //       fullName: fullName,
+  //       email: email,
+  //       imageLink: imageLink,
+  //       phoneNumber: phoneNumber,
+  //       docId: docId,
+  //     );
+  //   });
+  // }
 }

@@ -85,20 +85,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         final filteredEvents = events
                             .where((element) => element.isActive == true)
                             .toList();
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: filteredEvents.length,
-                          itemBuilder: (context, index) => EventListCard(
-                            data: filteredEvents[index],
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EventDetailScreen(
-                                      data: filteredEvents[index])),
-                            ),
-                          ),
-                        );
+                        return filteredEvents.length > 0
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                primary: false,
+                                itemCount: filteredEvents.length,
+                                itemBuilder: (context, index) => EventListCard(
+                                  data: filteredEvents[index],
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EventDetailScreen(
+                                            data: filteredEvents[index])),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Text("List is empty."),
+                              );
                       } else {
                         return Center(
                           child: CircularProgressIndicator(),

@@ -11,7 +11,7 @@ class CustomTextField extends StatelessWidget {
   bool? obsecureText, readOnly, autoFocus;
   AutovalidateMode? autovalidateMode;
   String? Function(String? value)? validator;
-  Function? onTap;
+  Function? onTap, onChanged;
 
   CustomTextField({
     super.key,
@@ -33,6 +33,7 @@ class CustomTextField extends StatelessWidget {
     this.readOnly,
     this.onTap,
     this.autoFocus,
+    this.onChanged,
   });
 
   @override
@@ -43,6 +44,7 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         autofocus: autoFocus ?? false,
         onTap: () => onTap != null ? onTap!() : "",
+        onChanged: (value) => onTap != null ? onChanged!(value) : "",
         controller: inputController,
         keyboardType: textInputType ?? TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,

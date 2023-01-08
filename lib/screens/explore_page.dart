@@ -1,8 +1,10 @@
 import 'package:event_app/components/custom_app_bar.dart';
+import 'package:event_app/components/custom_text_field.dart';
 import 'package:event_app/components/home_screen/event_list_card.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/screens/event_detail_screen.dart';
+import 'package:event_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
@@ -43,6 +45,26 @@ class _ExploreScreenState extends State<ExploreScreen>
           width: double.infinity,
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: CustomTextField(
+                  inputController: TextEditingController(),
+                  prefixIcon: Icons.search,
+                  borderRadius: 14,
+                  enabledBorderColor: Colors.blue,
+                  borderColor: Colors.blue,
+                  focusedBorderColor: Colors.blue,
+                  hintText: "Search Event",
+                  labelText: "Search Event",
+                  readOnly: true,
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchResultsScreen()));
+                  },
+                ),
+              ),
               TabBar(
                 controller: _controller,
                 isScrollable: true,

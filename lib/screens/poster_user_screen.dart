@@ -1,10 +1,12 @@
 import 'package:event_app/components/custom_button_rounded.dart';
+import 'package:event_app/components/event_detail/active_and_featured_view.dart';
 import 'package:event_app/components/event_detail/info_text_with_icon.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
 import 'package:event_app/screens/update_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PosterUserScreen extends StatefulWidget {
   EventModel data;
@@ -15,6 +17,7 @@ class PosterUserScreen extends StatefulWidget {
 }
 
 class _PosterUserScreenState extends State<PosterUserScreen> {
+  PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
     Widget cancelButton = TextButton(
@@ -51,15 +54,54 @@ class _PosterUserScreenState extends State<PosterUserScreen> {
             width: double.infinity,
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    widget.data.images.first,
-                    width: double.infinity,
-                    height: 500,
-                    fit: BoxFit.cover,
-                  ),
+                Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    SizedBox(
+                      height: 500,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: widget.data.images.length,
+                        itemBuilder: (context, index) => ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            widget.data.images[index],
+                            width: double.infinity,
+                            height: 500,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: const Alignment(0, 2),
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: SmoothPageIndicator(
+                        controller: _pageController,
+                        count: widget.data.images.length,
+                        effect: const SlideEffect(
+                          spacing: 8.0,
+                          radius: 8.0,
+                          dotWidth: 20.0,
+                          dotHeight: 12.0,
+                          paintStyle: PaintingStyle.stroke,
+                          strokeWidth: 1.5,
+                          dotColor: Colors.blueAccent,
+                          activeDotColor: Colors.blueAccent,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
+                // ClipRRect(
+                //   borderRadius: BorderRadius.circular(20),
+                //   child: Image.network(
+                //     widget.data.images.first,
+                //     width: double.infinity,
+                //     height: 500,
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
                 Container(
                   padding: const EdgeInsets.only(
                     left: 20,
@@ -78,6 +120,29 @@ class _PosterUserScreenState extends State<PosterUserScreen> {
                           fontWeight: FontWeight.w900,
                           fontSize: 28,
                         ),
+                      ),
+
+                      InfoCardWithActiveFeaturedIcon(
+                        icon: Icons.toggle_on_outlined,
+                        iconColor:
+                            widget.data.isActive ? Colors.green : Colors.red,
+                        textColor:
+                            widget.data.isActive ? Colors.green : Colors.red,
+                        title: "Active",
+                        subTitle: widget.data.isActive
+                            ? "Event is Active"
+                            : "Event is Inactive",
+                      ),
+                      InfoCardWithActiveFeaturedIcon(
+                        icon: Icons.featured_play_list_outlined,
+                        iconColor:
+                            widget.data.isFeatured ? Colors.green : Colors.red,
+                        textColor:
+                            widget.data.isActive ? Colors.green : Colors.red,
+                        title: "Featured",
+                        subTitle: widget.data.isActive
+                            ? "Event is Featured"
+                            : "Event is not Featured",
                       ),
                       InfoCardWithIcon(
                           icon: Icons.calendar_month,
