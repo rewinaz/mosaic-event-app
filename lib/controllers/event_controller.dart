@@ -161,7 +161,7 @@ class EventController {
       'price': event.price,
       'quantity': quantitySold,
       'userId': userId,
-      'timeStamp': DateTime.now(),
+      'sellerId': event.postedBy,
     }).then((value) {
       final eventCollection = FirebaseFirestore.instance
           .collection('events')

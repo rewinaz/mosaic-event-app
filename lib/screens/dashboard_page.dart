@@ -1,8 +1,10 @@
 import 'package:event_app/components/custom_app_bar.dart';
+import 'package:event_app/components/dashboard/report_card.dart';
 import 'package:event_app/components/home_screen/event_list_card.dart';
 import 'package:event_app/components/home_screen/section_title_bar.dart';
 import 'package:event_app/controllers/event_controller.dart';
 import 'package:event_app/models/event_model.dart';
+import 'package:event_app/models/sales_model.dart';
 import 'package:event_app/screens/poster_user_screen.dart';
 import 'package:event_app/screens/update_event_screen.dart';
 import 'package:event_app/variables.dart';
@@ -58,9 +60,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              PageView(
-                children: [],
-              ),
+              StreamBuilder<List<SalesModel>>(
+                  stream: SalesModel.getAllSales(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(
+                          "Something went wrong! ${snapshot.error.toString()}");
+                    } else if (snapshot.hasData) {
+                      final sales = snapshot.data ?? [];
+                      final filteredSales = sales
+                          .where((element) =>
+                              element.sellerId == currentUser.docId)
+                          .toList();
+                      final totalSale =
+                          SalesModel.calculateTotalSale(filteredSales)
+                              .toString();
+                      final ticketsSold =
+                          SalesModel.calculateTicketsSold(filteredSales)
+                              .toString();
+                      return SizedBox(
+                          height: 150,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              ReoprtCard(
+                                title: "Total Sale",
+                                subtitle: "$totalSale Br",
+                                icon: Icons.attach_money_rounded,
+                              ),
+                              ReoprtCard(
+                                title: "Tickets Sold",
+                                subtitle: "$ticketsSold",
+                                icon: Icons.airplane_ticket,
+                              ),
+                            ],
+                          ));
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
               SectionTitleBar(title: "Posted Events", onTap: () {}),
               const SizedBox(
                 height: 15,

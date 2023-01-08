@@ -34,14 +34,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }) {
     for (var i = 0; i < this.quantity; i++) {
       tickets.add(
-        QrImage(
-            data: "${event.docId}.${userId}.${event.quantity - i}",
-            version: QrVersions.auto,
-            size: 320,
-            gapless: false,
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size(80, 80),
-            )),
+        Container(
+          child: QrImage(
+              data: "${event.docId}.${userId}.${event.quantity - i}",
+              version: QrVersions.auto,
+              size: 320,
+              gapless: false,
+              embeddedImageStyle: QrEmbeddedImageStyle(
+                size: const Size(80, 80),
+              )),
+        ),
       );
     }
     Navigator.pushReplacement(
