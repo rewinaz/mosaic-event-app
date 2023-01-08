@@ -96,8 +96,7 @@ class TicketSuccessScreen extends StatelessWidget {
                 for (var element in tickets)
                   Column(
                     children: [
-                      Screenshot(
-                        controller: _controller,
+                      Container(
                         child: element,
                       ),
                       Row(
